@@ -26,6 +26,10 @@ To use a USB camera on the Jetson, you need to use the plugin v4l2src.  While no
 gst-launch-1.0 v4l2src device=/dev/video0 ! video/x-raw,framerate=30/1,format=YUY2 ! videoconvert ! video/x-raw,format=GRAY8 ! videoconvert ! ximagesink
 gst-launch-1.0  v4l2src device=/dev/video0 ! video/x-raw,framerate=30/1,format=YUY2 ! videoconvert ! video/x-raw,format=GRAY8 ! videoconvert ! video/x-raw,format=BGRx ! ximagesink
 
+v4l2src device=/dev/video0 ! nvvidconv ! nv3dsink
+v4l2src device=/dev/video0 ! nvvidconv ! nvegltransform ! nveglglessink -e
+gst-launch-1.0  v4l2src device=/dev/video0 ! nvvidconv ! 'video/x-raw(memory:NVMM),height=200,width=300,format=I420' ! nv3dsink
+
 ## Part 3: Not just video, let's look at audio
 
 
