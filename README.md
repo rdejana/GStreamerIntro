@@ -21,6 +21,11 @@ Unlike the first example, this one leverages a number of Nvidia plugins:
 ## Part 2: USB Camera
 To use a USB camera on the Jetson, you need to use the plugin v4l2src.  While not covered here, if you are using a Raspberry Pi Camera, you would need to use the plugin nvarguscamerasrc.
 
+
+
+gst-launch-1.0 v4l2src device=/dev/video0 ! video/x-raw,framerate=30/1,format=YUY2 ! videoconvert ! video/x-raw,format=GRAY8 ! videoconvert ! ximagesink
+
+
 ## Part 3: Not just video, let's look at audio
 
 
