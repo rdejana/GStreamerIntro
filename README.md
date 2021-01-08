@@ -178,7 +178,24 @@ And playing it back is simple:
 gst-launch-1.0 filesrc location=test.mp4 ! qtdemux ! queue ! h264parse ! nvv4l2decoder ! nv3dsink -e
 ```
 
-## Part 5: Python and OpenCV
+## Part 5: Streaming
+
+This is a simple streaming example, with both sides running on the NX.  This will require two shell windows.
+
+In the first window, run the following: 
+```
+gst-launch-1.0 v4l2src device=/dev/video0 ! video/x-raw,framerate=30/1,width=640,height=480 ! nvvidconv ! 'video/x-raw(memory:NVMM), format=NV12' ! nvv4l2h264enc insert-sps-pps=true ! h264parse ! rtph264pay pt=96 ! udpsink host=127.0.0.1 port=8001 sync=false -e
+```
+This starts the "server" broadcasting the packets (udp) to the IP Address 127.0.01 on port 8001. The server broadcasts the stream using RTP that hs h264 ecnoded.
+
+In the second window, run the following: 
+```
+ gst-launch-1.0 udpsrc address=127.0.0.1 port=8001 caps='application/x-rtp, encoding-name=(string)H264, payload=(int)96' ! rtph264depay ! queue ! h264parse ! nvv4l2decoder ! nv3dsink -e
+```
+This listens for the packets and decdes the RTP stream and displays it on the screen.
+
+
+## Part 6: Python and OpenCV
 We can leverage gstreamer from within python and openCV. 
 
 ```
