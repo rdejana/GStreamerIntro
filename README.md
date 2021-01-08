@@ -39,6 +39,17 @@ gst-launch-1.0  avfvideosrc device-index=0 ! videoconvert ! warptv ! videoconver
 
 gst-launch-1.0 -v videotestsrc ! agingtv scratch-lines=15 ! videoconvert ! autovideosink
 
+gst-launch-1.0 videotestsrc ! video/x-raw, format=GRAY8 ! videoconvert ! autovideosink 
+
+vs 
+
+gst-launch-1.0 videotestsrc ! video/x-raw ! videoconvert ! video/x-raw,format=GRAY ! autovideosink
+
+Which?  Depends what you need.  Often lower down is better, but what if you want...
+
+gst-launch-1.0 videotestsrc ! queue ! tee name=t  t. ! queue ! autovideosink sync=false t. ! queue ! videoconvert ! video/x-raw,format=GRAY8 ! autovideosink sync=false -e
+
+
 now with video
 
 gst-launch-1.0  avfvideosrc device-index=0 ! videoconvert ! agingtv scratch-lines=15 ! videoconvert ! autovideosink
@@ -55,6 +66,9 @@ gst-launch-1.0 avfvideosrc device-index=0 ! videobalance  contrast=1.5 brightnes
 Some text: gst-launch-1.0  avfvideosrc device-index=0 ! videoconvert ! textoverlay text="Hello World" valignment=bottom halignment=left font-desc="Sans, 40" ! autovideosink
 
 gst-launch-1.0 videotestsrc ! queue ! tee name=t  t. ! queue ! autovideosink sync=false t. ! queue ! videoflip method=horizontal-flip ! autovideosink sync=false -e
+
+gst-launch-1.0 avfvideosrc device-index=0 ! queue ! tee name=t  t. ! queue ! autovideosink sync=false t. ! queue ! videoflip method=horizontal-flip ! autovideosink sync=false -e
+
 
 Add an image one
 
