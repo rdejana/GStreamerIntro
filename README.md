@@ -31,6 +31,34 @@ v4l2src device=/dev/video0 ! nvvidconv ! nvegltransform ! nveglglessink -e
 gst-launch-1.0  v4l2src device=/dev/video0 ! nvvidconv ! 'video/x-raw(memory:NVMM),height=200,width=300,format=I420' ! nv3dsink
 
 ## Part 3: Not just video, let's look at audio
+## Part N: Fun and games
+
+Special effects
+
+gst-launch-1.0  avfvideosrc device-index=0 ! videoconvert ! warptv ! videoconvert ! autovideosink
+
+gst-launch-1.0 -v videotestsrc ! agingtv scratch-lines=15 ! videoconvert ! autovideosink
+
+now with video
+
+gst-launch-1.0  avfvideosrc device-index=0 ! videoconvert ! agingtv scratch-lines=15 ! videoconvert ! autovideosink
+
+gst-launch-1.0 -v videotestsrc ! agingtv scratch-lines=15 ! videoconvert ! autovideosink
+
+gst-launch-1.0 videotestsrc ! videobalance  contrast=1.5 brightness=-.3 saturation=1.2 ! videoconvert ! autovideosink
+
+gst-launch-1.0 avfvideosrc device-index=0 ! videobalance  contrast=1.5 brightness=-.3 saturation=1.2 ! videoconvert ! autovideosink
+
+gst-launch-1.0 avfvideosrc device-index=0 ! videobalance  contrast=1.5 brightness=.1 saturation=1.2 ! videoconvert ! autovideosink
+
+
+Some text: gst-launch-1.0  avfvideosrc device-index=0 ! videoconvert ! textoverlay text="Hello World" valignment=bottom halignment=left font-desc="Sans, 40" ! autovideosink
+
+gst-launch-1.0 videotestsrc ! queue ! tee name=t  t. ! queue ! autovideosink sync=false t. ! queue ! videoflip method=horizontal-flip ! autovideosink sync=false -e
+
+Add an image one
+
+Image merge example (see below)
 
 
 ## Part 4: Streaming
